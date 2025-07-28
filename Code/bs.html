@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KasirKu - Aplikasi Kasir Sederhana (Tanpa JS)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 20px auto;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      color: #2196f3;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #2196f3;
+      color: white;
+    }
+    input[type=number] {
+      width: 60px;
+      padding: 5px;
+      text-align: center;
+    }
+    input[type=submit] {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      display: block;
+      margin: 0 auto;
+    }
+    input[type=submit]:hover {
+      background-color: #388e3c;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>KasirKu - Aplikasi Kasir Sederhana</h1>
+
+  <form action="/proses-transaksi" method="POST">
+    <h2>Daftar Produk</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nama Produk</th>
+          <th>Harga (Rp)</th>
+          <th>Jumlah Beli</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Buku Tulis</td>
+          <td>5.000</td>
+          <td><input type="number" name="qty_bukutulis" min="0" value="0" /></td>
+        </tr>
+        <tr>
+          <td>Pulpen</td>
+          <td>3.000</td>
+          <td><input type="number" name="qty_pulpen" min="0" value="0" /></td>
+        </tr>
+        <tr>
+          <td>Penghapus</td>
+          <td>2.000</td>
+          <td><input type="number" name="qty_penghapus" min="0" value="0" /></td>
+        </tr>
+        <tr>
+          <td>Pensil</td>
+          <td>4.000</td          <td><input type="number" name="qty_pensil" min="0" value="0" /></td>
+        </tr>
+        <tr>
+          <td>Spidol</td>
+          <td>7.000</td>
+          <td><input type="number" name="qty_spidol" min="0" value="0" /></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <input type="submit" value="Proses Transaksi" />
+  </form>
+
+</body>
+</html>

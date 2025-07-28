@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kasir Sederhana dengan Download Nota</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; max-width: 400px; }
+    input, button { width: 100%; padding: 8px; margin: 8px 0; box-sizing: border-box; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    #totalBayar { font-weight: bold; margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <h2>Kasir Sederhana</h2>
+
+  <input type="text" id="namaBarang" placeholder="Nama barang" />
+  <input type="number" id="hargaSatuan" placeholder="Harga satuan (Rp)" />
+  <input type="number" id="jumlah" placeholder="Jumlah" />
+
+  <button onclick="tambahBarang()">Tambah Barang</button>
+
+  <table id="tabelBarang" style="display:none;">
+    <thead>
+      <tr>
+        <th>Nama Barang</th>
+        <th>Harga Satuan</th>
+        <th>Jumlah</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div id="totalBayar">Total Bayar: Rp 0</div>
+
+  <button onclick="downloadNotaPDF()" style="margin-top:15px;">Download Nota PDF</button>
+
+  <!-- Load jsPDF and html2canvas dari CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script>
+    let total = 0;
+
+    function tambahBarang() {
+      const nama = document.getElementById('namaBarang').value.trim();
+      const harga = parseFloat(document.getElementById('hargaSatuan').value);
+      const jumlah = parseInt(document.getElementById('jumlah').value);
+
+      if (!nama) return alert('Nama barang harus diisi!');
+      if (isNaN(harga) || harga <= 0) return alert('Harga harus > 0!');
+      if (isNaN(jumlah) || jumlah <= 0) return alert('Jumlah harus > 0!');
+
+      const subtotal = harga * jumlah;
+      total += subtotal;
+
+      const tbody = document.querySelector('#tabelBarang tbody');
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${nama}</td>
+        <td>Rp ${harga.toLocaleString()}</td>
+        <td>${jumlah}</td>
+        <td>Rp ${subtotal.toLocaleString()}</td>
+      `;
+      tbody.appendChild(row);
+
+      document.getElementById('totalBayar').innerText = `Total Bayar: Rp ${total.toLocaleString()}`;
+      document.getElementById('tabelBarang').style.display = 'table';
+
+      // reset input
+      document.getElementById('namaBarang').value = '';
+      document.getElementById('hargaSatuan').value = '';
+      document.getElementById('jumlah').value = '';
+      document.getElementById('namaBarang').focus();
+    }
+
+    async function downloadNotaPDF() {
+      const { jsPDF } = window.jspdf;
+      const table = document.getElementById('tabelBarang');
+
+      if (table.style.display === 'none') {
+        alert('Belum ada barang yang ditambahkan!');
+        return;
+      }
+
+      // Buat elemen sementara untuk nota dengan total
+      const notaDiv = document.createElement('div');
+      notaDiv.style.padding = '10px';
+      notaDiv.style.fontFamily = 'Arial, sans-serif';
+
+      // Salin tabel ke notaDiv
+      notaDiv.innerHTML = `
+        <h3>Nota Pembelian</h3>
+        ${table.outerHTML}
+        <p style="font-weight:bold; margin-top:10px;">Total Bayar: Rp ${total.toLocaleString()}</p>
+      `;
+
+      document.body.appendChild(notaDiv);
+
+      // Capture notaDiv sebagai gambar
+      const canvas = await html2canvas(notaDiv, { scale: 2 });
+      const imgData = canvas.toDataURL('image/png');
+
+      // Buat PDF ukuran A4 portrait
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'pt',
+        format: 'a4',
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('nota_pembelian.pdf');
+
+      // Hapus elemen sementara
+      document.body.removeChild(notaDiv);
+    }
+  </script>
+</body>
+</html>

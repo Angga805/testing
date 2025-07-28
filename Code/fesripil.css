@@ -1,0 +1,25 @@
+p {
+    font-size: 18px;
+    color: #666;
+    margin: 5px 0;
+}
+.nav {
+    margin-top: 20px;
+}
+.nav a {
+
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    background: #007BFF;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin: 5px;
+}
+.nav a:hover {
+    background: #0056b3;
+}
+div {
+    align-items: center;
+    text-align: center;
+}
